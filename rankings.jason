@@ -1,0 +1,22 @@
+[
+  {"rank": 1, "name": "Deepika Padukone", "category": "Bollywood", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 2, "name": "Alia Bhatt", "category": "Bollywood", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 3, "name": "Katrina Kaif", "category": "Bollywood", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 4, "name": "Kiara Advani", "category": "Bollywood", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 5, "name": "Priyanka Chopra", "category": "Bollywood", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 6, "name": "Kareena Kapoor", "category": "Bollywood", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 7, "name": "Ananya Panday", "category": "Bollywood", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 8, "name": "Shraddha Kapoor", "category": "Bollywood", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 9, "name": "Janhvi Kapoor", "category": "Bollywood", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 10, "name": "Disha Patani", "category": "Bollywood", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 11, "name": "Samantha Ruth Prabhu", "category": "South Indian", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 12, "name": "Rashmika Mandanna", "category": "South Indian", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 13, "name": "Pooja Hegde", "category": "South Indian", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 14, "name": "Nayanthara", "category": "South Indian", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 15, "name": "Tamannaah Bhatia", "category": "South Indian", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 16, "name": "Anupama Parameswaran", "category": "South Indian", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 17, "name": "Keerthy Suresh", "category": "South Indian", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 18, "name": "Kajal Aggarwal", "category": "South Indian", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 19, "name": "Mrunal Thakur", "category": "Both", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0},
+  {"rank": 20, "name": "Kriti Sanon", "category": "Bollywood", "rating": 1500, "rd": 350, "wins": 0, "losses": 0, "battles": 0}
+]
