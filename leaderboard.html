@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Indian CelebBattles — Leaderboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --crimson: #8b1a1a;
+    --deep: #0d0a07;
+    --surface: #171210;
+    --card: #1f1a15;
+    --border: rgba(201,168,76,0.18);
+    --text: #f0e6d3;
+    --muted: #7a6a55;
+    --bollywood: #c9a84c;
+    --south: #6eb5a0;
+    --both: #a87cc9;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--deep);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+
+  /* Decorative top border */
+  .top-bar {
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--crimson), var(--gold), transparent);
+  }
+
+  header {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.1;
+  }
+
+  h1 span {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  .divider {
+    display: flex; align-items: center; gap: 1rem;
+    justify-content: center; margin: 1.5rem auto;
+    width: min(400px, 90%);
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--border); }
+  .divider-gem {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  /* Filters */
+  .filters {
+    display: flex; gap: 0.6rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0 1rem 2rem;
+    position: relative; z-index: 1;
+  }
+
+  .filter-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.45rem 1.2rem;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .filter-btn.active { background: var(--gold); border-color: var(--gold); color: var(--deep); font-weight: 500; }
+  .filter-btn.south.active { background: var(--south); border-color: var(--south); }
+  .filter-btn.both.active { background: var(--both); border-color: var(--both); }
+
+  /* Table container */
+  .table-wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 1rem 4rem;
+    position: relative; z-index: 1;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead th {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0.8rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  thead th.num { text-align: right; }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(201,168,76,0.07);
+    transition: background 0.15s;
+    animation: fadeIn 0.4s ease both;
+  }
+  tbody tr:hover { background: rgba(201,168,76,0.05); }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  td {
+    padding: 0.95rem 1rem;
+    vertical-align: middle;
+  }
+
+  .rank-cell {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--muted);
+    width: 50px;
+  }
+  .rank-cell.top3 { color: var(--gold); }
+
+  .medal { font-size: 1rem; }
+
+  .name-cell {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+
+  .cat-badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+  }
+  .cat-bollywood { background: rgba(201,168,76,0.15); color: var(--gold); }
+  .cat-south     { background: rgba(110,181,160,0.15); color: var(--south); }
+  .cat-both      { background: rgba(168,124,201,0.15); color: var(--both); }
+
+  .rating-cell {
+    font-family: 'DM Mono', monospace;
+    font-size: 1rem;
+    color: var(--gold-light);
+    text-align: right;
+  }
+
+  .rd-cell {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  .record-cell {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    text-align: right;
+  }
+  .wins  { color: #6eb56e; }
+  .losses{ color: #b56e6e; }
+
+  .battles-cell {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  /* Confidence bar */
+  .conf-wrap {
+    width: 60px;
+    height: 4px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-left: auto;
+  }
+  .conf-bar {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 0.4s;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 3rem;
+    color: var(--muted);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    border-top: 1px solid var(--border);
+    position: relative; z-index: 1;
+  }
+
+  @media (max-width: 600px) {
+    .rd-cell, .conf-wrap { display: none; }
+    td, th { padding: 0.8rem 0.6rem; }
+  }
+</style>
+</head>
+<body>
+<div class="top-bar"></div>
+
+<header>
+  <p class="subtitle">r/IndianCelebBattles &nbsp;·&nbsp; Live Rankings</p>
+  <h1>Indian Celeb<br/><span>Leaderboard</span></h1>
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-gem"></div>
+    <div class="divider-line"></div>
+  </div>
+  <p style="color:var(--muted);font-size:0.82rem;">Glicko ratings updated after each battle poll</p>
+</header>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filter('all', this)">All</button>
+  <button class="filter-btn" onclick="filter('Bollywood', this)">Bollywood</button>
+  <button class="filter-btn south" onclick="filter('South Indian', this)">South Indian</button>
+  <button class="filter-btn both" onclick="filter('Both', this)">Cross-Industry</button>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Celebrity</th>
+        <th class="num">Rating</th>
+        <th class="num">RD</th>
+        <th class="num">W / L</th>
+        <th class="num">Battles</th>
+        <th class="num" title="Confidence (lower RD = more confident)">Conf.</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<footer>
+  Ratings start at 1500 · RD starts at 350 · Lower RD = more established rating
+</footer>
+
+<script>
+const RANKINGS_URL = 'rankings.json';
+let allData = [];
+let currentFilter = 'all';
+
+const medals = ['🥇','🥈','🥉'];
+
+function catClass(cat) {
+  if (cat === 'Bollywood') return 'bollywood';
+  if (cat === 'South Indian') return 'south';
+  return 'both';
+}
+
+function confidence(rd) {
+  // Lower RD = higher confidence. RD range: 30–350
+  const pct = Math.max(0, Math.min(100, Math.round((1 - (rd - 30) / 320) * 100)));
+  return pct;
+}
+
+function render(data) {
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+
+  const filtered = currentFilter === 'all'
+    ? data
+    : data.filter(c => c.category === currentFilter);
+
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty">No celebs found.</td></tr>';
+    return;
+  }
+
+  filtered.forEach((c, i) => {
+    const displayRank = i + 1;
+    const isTop3 = displayRank <= 3;
+    const rankDisplay = isTop3
+      ? `<span class="medal">${medals[displayRank-1]}</span>`
+      : displayRank;
+    const conf = confidence(c.rd);
+
+    const tr = document.createElement('tr');
+    tr.style.animationDelay = `${i * 0.03}s`;
+    tr.innerHTML = `
+      <td class="rank-cell ${isTop3 ? 'top3' : ''}">${rankDisplay}</td>
+      <td class="name-cell">
+        ${c.name}
+        <span class="cat-badge cat-${catClass(c.category)}">${c.category}</span>
+      </td>
+      <td class="rating-cell">${c.rating.toLocaleString()}</td>
+      <td class="rd-cell">±${c.rd}</td>
+      <td class="record-cell">
+        <span class="wins">${c.wins}W</span>
+        <span style="color:var(--muted)"> / </span>
+        <span class="losses">${c.losses}L</span>
+      </td>
+      <td class="battles-cell">${c.battles}</td>
+      <td><div class="conf-wrap"><div class="conf-bar" style="width:${conf}%"></div></div></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function filter(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render(allData);
+}
+
+async function loadData() {
+  try {
+    const res = await fetch(RANKINGS_URL + '?t=' + Date.now());
+    allData = await res.json();
+    // Sort by rating descending
+    allData.sort((a, b) => b.rating - a.rating);
+    render(allData);
+  } catch (e) {
+    document.getElementById('tbody').innerHTML =
+      '<tr><td colspan="7" class="empty">Could not load rankings.json — make sure it\'s in the same folder.</td></tr>';
+  }
+}
+
+loadData();
+// Auto-refresh every 5 minutes
+setInterval(loadData, 300_000);
+</script>
+</body>
+</html>
